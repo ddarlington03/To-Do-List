@@ -10,18 +10,20 @@ import SwiftUI
 struct ContentView: View {
     @State var things = ["First Thing", "Second Thing", "Third Thing", "Fourth Thing", "Fifth Thing"]
     var body: some View {
-        List {
-            ForEach(things, id: \.self) {thing in Text(thing)
+        NavigationView {
+            List {
+                ForEach(things, id: \.self) {thing in Text(thing)
+                }
+                .onMove(perform: { indices, newOffset in
+                    things.move(fromOffsets: indices, toOffset: newOffset)
+                })
+                .onDelete(perform: { indexSet in
+                    things.remove(atOffsets: indexSet)
+                })
             }
-            .onMove(perform: { indices, newOffset in
-                things.move(fromOffsets: indices, toOffset: newOffset)
-            })
-            .onDelete(perform: { indexSet in
-                things.remove(atOffsets: indexSet)
-            })
+            .navigationBarTitle("Things")
+            .navigationBarItems(leading: EditButton())
         }
-        .navigationBarTitle("Things")
-        .navigationBarItems(leading: EditButton())
     }
 }
 
